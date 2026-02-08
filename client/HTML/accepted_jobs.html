@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Accepted Jobs</title>
+</head>
+<body>
+    
+    <!-- nav bar -->
+
+    <div class="wrapper_outer">
+        <button class="create_job_btn">
+            + Create
+        </button>
+
+        <div class="wrapper_inner">
+            <a href="marketplace.html"><button class="page_redirect">Marketplace</button></a>
+            <a href="accepted_jobs.html"><button class="page_redirect accepted_jobs_redirect">Accepted Jobs</button></a>
+            <a href="posted_jobs.html"><button class="page_redirect">Posted Jobs</button></a>
+            <a href="settings.html"><button class="page_redirect">Settings</button></a>
+        </div>
+    </div>
+
+    <!-- main page -->
+
+    <div class="wrapper">
+        <div class="job_box box1">
+            <p class="job_title">Help move a desk</p>
+            <p class="job_description">Need help carrying a medium-sized desk from one room to another 
+                in my house. Should take no longer than 20 minutes.</p>
+            <p class="job_author">by Alex Turner</p>
+        </div>
+
+        <div class="job_box box2">
+            <p class="job_title">Maths tutoring (AS level)</p>
+            <p class="job_description">Looking for someone to help explain 
+                differentiation and integration for an upcoming test. 
+                One-hour session, online or in person.</p>
+            <p class="job_author">by Priya Shah</p>
+        </div>
+
+        <div class="job_box box3">
+            <button class="add_btn_in">+</button>
+            <p class="free_job_text">Accept another job</p>
+        </div>
+    </div>
+
+    <!-- create job overlay menu -->
+
+    <div class="create_menu">
+        <input type="text" placeholder="Job title">
+        <input type="text" placeholder="Job description">
+        <input type="text" placeholder="First name">
+        <input type="text" placeholder="Last name">
+        <button class="submit_job">Create</button>
+    </div>
+
+</body>
+</html>
