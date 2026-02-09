@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <div class="job_box box3">
+        <div class="job_box empty_box">
             <button class="add_btn_in">+</button>
             <p class="free_job_text">Accept another job</p>
         </div>
@@ -59,13 +59,27 @@
 
     <!-- create job overlay menu -->
 
-    <div class="create_menu">
-        <input type="text" placeholder="Job title">
-        <input type="text" placeholder="Job description">
-        <input type="text" placeholder="First name">
-        <input type="text" placeholder="Last name">
-        <button class="submit_job">Create</button>
-    </div>
+    <form action="/jobs" method="POST">
+        <h2>Create a Job</h2>
+
+        <label for="firstname">First name:</label>
+        <input type="text" id="firstname" name="firstname" 
+            placeholder="e.g. Nikita" required>
+
+        <label for="lastname">Last name:</label>
+        <input type="text" id="lastname" name="lastname" 
+            placeholder="e.g. Zukauskas" required>
+
+        <label for="title">Job title:</label>
+        <input type="text" id="title" name="title" 
+            placeholder="e.g. Fix website bug" required>
+
+        <label for="description">Job description:</label>
+        
+
+        <button type="submit">Post Job</button>
+    </form>
+
 
 </body>
 </html>

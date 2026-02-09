@@ -23,7 +23,7 @@ body {
 
 
 
-/* nav bar */
+/* NAV BAR */
 
 .wrapper_outer {
     display: flex;
@@ -115,7 +115,7 @@ body {
     height: 30rem;
     font-size: 1.5rem;
 }
-.box3 {
+.empty_box {
     justify-content: center;
     align-items: center;
     outline: 2px dashed white;
