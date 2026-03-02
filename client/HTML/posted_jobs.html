@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" href="../images/fire-solid-full.svg" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -19,17 +20,17 @@
         </button>
 
         <div class="wrapper_inner">
-            <a href="marketplace.html"><button class="page_redirect">Marketplace</button></a>
-            <a href="accepted_jobs.html"><button class="page_redirect">Accepted Jobs</button></a>
+            <a href="marketplace.html"><button class="page_redirect"><img src="../images/shop-solid-full (1).svg" style="height: 2rem"></button></a>
             <a href="posted_jobs.html"><button class="page_redirect posted_jobs_redirect">Posted Jobs</button></a>
-            <a href="settings.html"><button class="page_redirect">Settings</button></a>
+            <a href="accepted_jobs.html"><button class="page_redirect">Accepted Jobs</button></a>
+            <a href="settings.html"><button class="page_redirect"><img src="../images/gear-solid-full.svg" style="height: 2rem;"></button></a>
         </div>
     </div>
 
     <!-- main page -->
 
     <div class="wrapper">
-        <div class="job_box">
+        <!-- <div class="job_box">
             <p class="job_title">Help move a desk</p>
             <p class="job_description">Need help carrying a medium-sized desk from one room to another 
                 in my house. Should take no longer than 20 minutes.</p>
@@ -37,25 +38,52 @@
                 <p>by Alex Turner</p>
                 <p>Accepted date: 23-01-2026</p>
             </div>
-        </div>
+        </div> -->
 
-        <div class="job_box">
-            <p class="job_title">Maths tutoring (AS level)</p>
-            <p class="job_description">Looking for someone to help explain 
-                differentiation and integration for an upcoming test. 
-                One-hour session, online or in person.
-            </p>
-            <div class="job_info">
-                <p>by Priya Shah</p>
-                <p>Accepted date: 09-02-2026</p>
-            </div>
-        </div>
-
-        <div class="job_box box3">
+        <div class="job_box1 empty_box">
             <button class="add_btn_in">+</button>
-            <p class="free_job_text">Post another job</p>
+            <p class="free_job_text">Accept another job</p>
+        </div>
+
+        <div class="job_box2 empty_box">
+            <button class="add_btn_in">+</button>
+            <p class="free_job_text">Accept another job</p>
+        </div>
+
+        <div class="job_box3 empty_box">
+            <button class="add_btn_in">+</button>
+            <p class="free_job_text">Accept another job</p>
         </div>
     </div>
 
+    <!-- create job overlay menu -->
+
+    <h1>Post a job</h1>
+    <form class="jobForm">
+        <input type="text" name="firstname" placeholder="first name:" class="firstname" required>
+        <input type="text" name="lastname" placeholder="last name:" class="lastname" required>
+        <input type="text" name="jobtitle" placeholder="job title:" class="jobtitle" required>
+        <input type="text" name="jobdescription" placeholder="job description:" class="jobdescription" required>
+        <button type="submit">Submit</button>
+    </form>
+    <button class="deleteBtn">Clear Database</button>
+    <p class="message"></p>
+
+    <div class="status_message success_m">
+        <p>Success</p>
+        <button>
+            <img src="../images/xmark-solid-full (1).svg" class="close_btn">
+        </button>
+    </div>
+
+    <div class="status_message failure_m" style="background-color: red;;">
+        <p>Failure</p>
+        <button>
+            <img src="../images/xmark-solid-full (1).svg" class="close_btn">
+        </button>
+    </div>
+
+    <script src="../JS/posted_jobs.js"></script>
+    
 </body>
 </html>

@@ -20,8 +20,8 @@
 
         <div class="wrapper_inner">
             <a href="marketplace.html"><button class="page_redirect">Marketplace</button></a>
-            <a href="accepted_jobs.html"><button class="page_redirect accepted_jobs_redirect">Accepted Jobs</button></a>
             <a href="posted_jobs.html"><button class="page_redirect">Posted Jobs</button></a>
+            <a href="accepted_jobs.html"><button class="page_redirect posted_jobs_redirect">Accepted Jobs</button></a>
             <a href="settings.html"><button class="page_redirect">Settings</button></a>
         </div>
     </div>
@@ -29,7 +29,7 @@
     <!-- main page -->
 
     <div class="wrapper">
-        <div class="job_box">
+        <div class="job_box1">
             <p class="job_title">Help move a desk</p>
             <p class="job_description">Need help carrying a medium-sized desk from one room to another 
                 in my house. Should take no longer than 20 minutes.</p>
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="job_box">
+        <div class="job_box2">
             <p class="job_title">Maths tutoring (AS level)</p>
             <p class="job_description">Looking for someone to help explain 
                 differentiation and integration for an upcoming test. 
@@ -51,35 +51,11 @@
             </div>
         </div>
 
-        <div class="job_box empty_box">
+        <div class="job_box3 empty_box">
             <button class="add_btn_in">+</button>
-            <p class="free_job_text">Accept another job</p>
+            <p class="free_job_text">Post another job</p>
         </div>
     </div>
-
-    <!-- create job overlay menu -->
-
-    <form action="/jobs" method="POST">
-        <h2>Create a Job</h2>
-
-        <label for="firstname">First name:</label>
-        <input type="text" id="firstname" name="firstname" 
-            placeholder="e.g. Nikita" required>
-
-        <label for="lastname">Last name:</label>
-        <input type="text" id="lastname" name="lastname" 
-            placeholder="e.g. Zukauskas" required>
-
-        <label for="title">Job title:</label>
-        <input type="text" id="title" name="title" 
-            placeholder="e.g. Fix website bug" required>
-
-        <label for="description">Job description:</label>
-        
-
-        <button type="submit">Post Job</button>
-    </form>
-
 
 </body>
 </html>
