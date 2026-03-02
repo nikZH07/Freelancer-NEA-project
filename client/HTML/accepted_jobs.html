@@ -57,5 +57,29 @@
         </div>
     </div>
 
+    <!-- create job overlay menu -->
+
+    <form action="/jobs" method="POST">
+        <h2>Create a Job</h2>
+
+        <label for="firstname">First name:</label>
+        <input type="text" id="firstname" name="firstname" 
+            placeholder="e.g. Nikita" required>
+
+        <label for="lastname">Last name:</label>
+        <input type="text" id="lastname" name="lastname" 
+            placeholder="e.g. Zukauskas" required>
+
+        <label for="title">Job title:</label>
+        <input type="text" id="title" name="title" 
+            placeholder="e.g. Fix website bug" required>
+
+        <label for="description">Job description:</label>
+        
+
+        <button type="submit">Post Job</button>
+    </form>
+
+
 </body>
 </html>
