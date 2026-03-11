@@ -91,4 +91,31 @@ async function renderJobs() {
     }
 }
 
+async function renderJobs() {
+    try {
+        const res = await fetch("http://localhost:3000/api/jobs/posted");
+        if (!res.ok) throw new Error(`${res.status}`);
+        const data = await res.json();
+
+        const limit = Math.min(data.length, 3); 
+
+        for (let i = 0; i < limit; i++) {
+            const jobBox = document.querySelector(`.job_box${i}`);
+            if (jobBox && data[i]) {
+                jobBox.classList.remove("empty_box");
+                jobBox.innerHTML = `
+                    <p class="job_title">${data[i].title}</p>
+                    <p class="job_description">${data[i].description}</p>
+                    <div class="job_info">
+                        <p>by ${data[i].firstname} ${data[i].lastname}</p>
+                        <p>Posted date: ${data[i].dateCreated}</p>
+                    </div>
+                `;
+            };
+        }
+    } catch (e) {
+        console.error("Failed to render jobs:", e);
+    }
+}
+
 renderJobs();

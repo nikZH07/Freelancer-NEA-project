@@ -33,7 +33,7 @@ server.post("/api/jobs", async (req, res) => {
     const { firstname, lastname, jobtitle, jobdescription } = req.body;
 
     db.get(
-        `SELECT COUNT(*) as count FROM jobs WHERE firstname = ? AND lastname = ?`,
+        `SELECT COUNT(*) as count FROM jobs WHERE LOWER(firstname) = LOWER(?) AND LOWER(lastname) = LOWER(?)`,
         [firstname, lastname],
         (err, row) => {
             if (err) {
@@ -74,9 +74,10 @@ server.post("/api/delete", (req, res) => {
 
 server.get("/api/jobs/posted", async (req, res) => {
     const sql = `SELECT * FROM jobs 
-                WHERE LOWER(firstname) = LOWER(?)`;
+                WHERE LOWER(firstname) = LOWER(?)
+                AND LOWER(lastname) = LOWER(?)`;
 
-    db.all(sql, ["nik"], (err, rows) => {
+    db.all(sql, ["nik", "zhuk"], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: "Failed to fetch jobs" });
