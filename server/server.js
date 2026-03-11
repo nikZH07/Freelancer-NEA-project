@@ -73,9 +73,10 @@ server.post("/api/delete", (req, res) => {
 })
 
 server.get("/api/jobs/posted", async (req, res) => {
-    const sql = `SELECT firstname, lastname, title, description, dateCreated FROM jobs`;
+    const sql = `SELECT * FROM jobs 
+                WHERE LOWER(firstname) = LOWER(?)`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, ["nik"], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: "Failed to fetch jobs" });

@@ -11,7 +11,6 @@
 *::before,
 *::after {
     box-sizing: border-box;
-    font-family: "Montserrat";
 }
 
 
@@ -32,11 +31,12 @@ body {
     display: flex;
     justify-content: space-between;
     background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
-    padding: 1rem 5rem;
+    padding: 2rem 5rem;
     border-radius: 1rem;
     margin: 1rem;
     /* position: fixed;
     width: 98.4%; */
+    align-items: center;
 }
 
 p {
@@ -47,9 +47,11 @@ p {
     display: flex;
     justify-content: space-around;
     gap: 2rem;
+    align-items: center;
 }
 
 .create_job_btn {
+    font-family: "Montserrat";
     font-size: 1.5rem;
     border: none;
     border-radius: 0.4rem;
@@ -81,6 +83,16 @@ p {
         0 0.15rem 0 #7a7a7a;
 }
 
+.page_icon {
+    color: white;
+    height: 1rem;
+    transition: color 0.3s ease;
+}
+
+.page_redirect:hover .page_icon {
+    color: rgb(34, 52, 90);
+}
+
 .page_redirect:active {
     box-shadow: none;
 }
@@ -109,6 +121,7 @@ p {
 .job_box1,
 .job_box2,
 .job_box3 {
+    font-family: "Montserrat";
     background: #0b1424;
     box-shadow:
         0 0 0 1px rgba(90, 120, 255, 0.15),

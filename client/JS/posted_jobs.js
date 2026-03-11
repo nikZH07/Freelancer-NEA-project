@@ -65,3 +65,30 @@ deleteBtn.addEventListener("click", async () => {
     }
 });
 
+async function renderJobs() {
+    const jobBox0 = document.querySelector(".job_box0");
+    const jobBox1 = document.querySelector(".job_box1");
+    const jobBox2 = document.querySelector(".job_box2");
+    try {
+        const res = await fetch("http://localhost:3000/api/jobs/posted");
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        for (let i = 0; i < data.length; i++) {
+            if (data[i]) {
+                document.querySelector(`.job_box${i}`).innerHTML = `
+                    <p class="job_title">Help move a desk</p>
+                    <p class="job_description">Need help carrying a medium-sized desk from one room to another 
+                        in my house. Should take no longer than 20 minutes.</p>
+                    <div class="job_info">
+                        <p>by Alex Turner</p>
+                        <p>Accepted date: 23-01-2026</p>
+                    </div>
+                `
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+renderJobs();
