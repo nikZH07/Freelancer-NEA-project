@@ -64,7 +64,7 @@ deleteBtn.addEventListener("click", async () => {
         failureMessage.classList.add("view");
     }
 });
-
+// comment
 async function renderJobs() {
     const jobBox0 = document.querySelector(".job_box0");
     const jobBox1 = document.querySelector(".job_box1");
