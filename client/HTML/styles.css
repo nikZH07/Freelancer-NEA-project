@@ -5,8 +5,6 @@
   font-style: normal;
 }
 
-
-
 *,
 *::before,
 *::after {
@@ -118,13 +116,13 @@ p {
     width: 90%;
 }
 
+.job_box0,
 .job_box1,
-.job_box2,
-.job_box3 {
+.job_box2 {
     font-family: "Montserrat";
     background: #0b1424;
     box-shadow:
-        0 0 0 1px rgba(90, 120, 255, 0.15),
+        0 0 0 1px rgba(0, 0, 0, 0.15),
         0 10px 30px rgba(0, 0, 0, 0.6);
     color: white;
     width: 30rem;
@@ -137,6 +135,7 @@ p {
     font-size: 1.5rem;
     border-radius: 1rem;
 }
+
 .empty_box {
     justify-content: center;
     align-items: center;
@@ -219,3 +218,6 @@ p {
 .view {
     display: block;
 }
+
+/* settings tab */
+

@@ -1,10 +1,12 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
 
 const server = express();
 const PORT = 3000;
 
+server.use(cookieParser());
 server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
@@ -13,7 +15,7 @@ const db = new sqlite3.Database("./jobs.db", (err) => {
   if (err) {
     console.error("Failed to connect to SQLite:", err.message);
   } else {
-    console.log("Connected to SQLite:", "./jobs.db");
+    console.log("Connected to SQLite:", "./jobs.db, ./users.db");
   }
 });
 
@@ -29,11 +31,20 @@ db.run(`
     )    
 `);
 
+db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role TEXT DEFAULT "freelancer"
+    )
+`);
+
 server.post("/api/jobs", async (req, res) => {
     const { firstname, lastname, jobtitle, jobdescription } = req.body;
 
     db.get(
-        `SELECT COUNT(*) as count FROM jobs WHERE firstname = ? AND lastname = ?`,
+        `SELECT COUNT(*) as count FROM jobs WHERE LOWER(firstname) = LOWER(?) AND LOWER(lastname) = LOWER(?)`,
         [firstname, lastname],
         (err, row) => {
             if (err) {
@@ -74,9 +85,10 @@ server.post("/api/delete", (req, res) => {
 
 server.get("/api/jobs/posted", async (req, res) => {
     const sql = `SELECT * FROM jobs 
-                WHERE LOWER(firstname) = LOWER(?)`;
+                WHERE LOWER(firstname) = LOWER(?)
+                AND LOWER(lastname) = LOWER(?)`;
 
-    db.all(sql, ["nik"], (err, rows) => {
+    db.all(sql, ["nik", "zhuk"], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: "Failed to fetch jobs" });
@@ -85,6 +97,22 @@ server.get("/api/jobs/posted", async (req, res) => {
     });
 });
 
+server.post("/login", (req, res) => {
+    const {username, passowrd} = req.body;
+
+    db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
+        if (err) {
+            return res.status(500).send("Database error");
+        }
+
+        if (user && user.password === password) {
+            res.cookie('userData', user.username, { httpOnly: true });
+            res.redirect('../client/HTML/marketplace/html');
+        } else {
+            res.send("Invalid username or password. <a href='/login'>Try again</a>");
+        }
+    });
+});
 
 server.get("/api/health", (req, res) => res.json({ ok: true }));
 server.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`))
