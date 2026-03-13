@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
 
 const server = express();
 const PORT = 3000;
@@ -10,6 +11,7 @@ server.use(cookieParser());
 server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+server.use(express.static(path.join(__dirname, '../client')));
 
 const db = new sqlite3.Database("./jobs.db", (err) => {
   if (err) {
@@ -97,8 +99,12 @@ server.get("/api/jobs/posted", async (req, res) => {
     });
 });
 
+server.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/HTML/login.html'));
+});
+
 server.post("/login", (req, res) => {
-    const {username, passowrd} = req.body;
+    const {username, password} = req.body;
 
     db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
         if (err) {
@@ -107,7 +113,7 @@ server.post("/login", (req, res) => {
 
         if (user && user.password === password) {
             res.cookie('userData', user.username, { httpOnly: true });
-            res.redirect('../client/HTML/marketplace/html');
+            res.redirect('/HTML/marketplace.html');
         } else {
             res.send("Invalid username or password. <a href='/login'>Try again</a>");
         }

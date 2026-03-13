@@ -1,0 +1,3 @@
+server/jobs.db
+node_modules/
+.env
