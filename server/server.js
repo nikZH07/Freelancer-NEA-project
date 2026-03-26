@@ -2,11 +2,23 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
+const session = require("express-session");
 const path = require("path");
 
 const server = express();
 const PORT = 3000;
 
+server.use(
+    session({
+        secret: "top_secret_key_init",
+        saveUninitialized: false,
+        resave: false,
+        cookie: {
+            maxAge: 60000 * 60 * 24 * 30, // 30 days
+            httpOnly: true,
+            secure: false
+        }
+    }));
 server.use(cookieParser());
 server.use(cors());
 server.use(express.json());
