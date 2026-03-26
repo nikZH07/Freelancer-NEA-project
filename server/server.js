@@ -111,26 +111,24 @@ server.get("/api/jobs/posted", async (req, res) => {
     });
 });
 
-server.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/HTML/login.html'));
-});
-
 server.post("/login", (req, res) => {
     const {username, password} = req.body;
 
     db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
         if (err) {
+            console.error(err);
             return res.status(500).send("Database error");
         }
 
         if (user && user.password === password) {
-            res.cookie('userData', user.username, { httpOnly: true });
+            req.session.user = user.username;
             res.redirect('/HTML/marketplace.html');
         } else {
-            res.send("Invalid username or password. <a href='/login'>Try again</a>");
+            return res.status(401).send("Invalid username or password <a href='/login'>Try again</a>");
         }
     });
 });
 
+server.use(express.static(path.join(__dirname, '../client')));
 server.get("/api/health", (req, res) => res.json({ ok: true }));
 server.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`))
