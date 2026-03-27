@@ -1,5 +1,3 @@
-const firstnameInp = document.querySelector(".firstname");
-const lastnameInp = document.querySelector(".lastname");
 const jobtitleInp = document.querySelector(".jobtitle");
 const jobdescriptionInp = document.querySelector(".jobdescription");
 const submitBtn = document.querySelector(".submitBtn");
@@ -12,9 +10,7 @@ const failureMessage = document.querySelector(".failure_m");
 jobForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     console.log("form intercepted")
-    
-    const firstname = firstnameInp.value;
-    const lastname = lastnameInp.value;
+
     const jobtitle = jobtitleInp.value;
     const jobdescription = jobdescriptionInp.value;
 
@@ -24,7 +20,7 @@ jobForm.addEventListener("submit", async (e) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ firstname, lastname, jobtitle, jobdescription })
+            body: JSON.stringify({ jobtitle, jobdescription })
         });
         if (!res.ok) {
             throw new Error(`${res.status} ${res.statusText}`)
