@@ -131,7 +131,7 @@ server.post("/api/delete", (req, res) => {
             res.json({ ok: true })
         }
     )
-})
+});
 
 server.get("/api/jobs/posted", async (req, res) => {
     const sql = `SELECT * FROM jobs 
