@@ -7,6 +7,11 @@ const deleteBtn = document.querySelector(".deleteBtn");
 const successMessage = document.querySelector(".success_m");
 const failureMessage = document.querySelector(".failure_m");
 
+
+renderJobs();
+
+setInterval(renderJobs, 5000);
+
 jobForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     console.log("form intercepted")
@@ -65,27 +70,32 @@ async function renderJobs() {
     try {
         const res = await fetch("http://localhost:3000/api/jobs/posted");
         if (!res.ok) throw new Error(`${res.status}`);
-        const data = await res.json();
+        
+        const data = await res.json(); 
 
-        const limit = Math.min(data.length, 3); 
+        const jobs = data.jobs;
+        const firstName = data.userFirstName;
+        const lastName = data.userLastName;
+
+        const limit = Math.min(jobs.length, 3); 
 
         for (let i = 0; i < limit; i++) {
             const jobBox = document.querySelector(`.job_box${i}`);
-            if (jobBox && data[i]) {
+            
+            if (jobBox && jobs[i]) {
                 jobBox.classList.remove("empty_box");
+                
                 jobBox.innerHTML = `
-                    <p class="job_title">${data[i].title}</p>
-                    <p class="job_description">${data[i].description}</p>
+                    <p class="job_title">${jobs[i].title}</p>
+                    <p class="job_description">${jobs[i].description}</p>
                     <div class="job_info">
-                        <p>by ${data[i].firstname} ${data[i].lastname}</p>
-                        <p>Posted date: ${data[i].dateCreated}</p>
+                        <p>by ${firstName} ${lastName}</p>
+                        <p>Posted date: ${jobs[i].dateCreated}</p>
                     </div>
                 `;
-            };
-        };
+            }
+        }
     } catch (e) {
         console.error("Failed to render jobs:", e);
     }
-}
-
-renderJobs();
+};

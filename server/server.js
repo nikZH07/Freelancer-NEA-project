@@ -14,7 +14,7 @@ server.use(
         saveUninitialized: false,
         resave: false,
         cookie: {
-            maxAge: 60000, // 1 minute
+            maxAge: 60000 * 60 * 24, // 1 day
             httpOnly: true,
             secure: false
         }
@@ -59,13 +59,32 @@ db.run(`
     )
 `);
 
-server.get('/HTML/marketplace.html', (req, res, next) => {
+const checkLogin = (req, res, next) => {
     if (req.session && req.session.user) {
         next();
     } else {
         console.log("Unauthorized access attempt. Redirecting to login...");
         res.redirect('/HTML/login.html');
     }
+};
+
+server.get('/HTML/marketplace.html', checkLogin, (req, res, next) => {
+    const sql = `
+        SELECT 
+            jobs.id, 
+            jobs.title, 
+            jobs.description, 
+            users.first_name, 
+            users.last_name 
+        FROM jobs
+        INNER JOIN users ON jobs.poster_id = users.id
+    `;
+    db.all(sql, [], function(err, rows){
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json(rows);
+    });
 });
 
 server.use(express.static(path.join(__dirname, '../client')));
@@ -82,9 +101,11 @@ server.post("/login", (req, res) => {
         if (user && user.password === password) {
             req.session.userId = user.id;
             req.session.user = user.username;
+            req.session.firstName = user.first_name;
+            req.session.lastName = user.last_name;
             res.redirect('/HTML/marketplace.html');
         } else {
-            return res.status(401).send("Invalid username or password <a href='/login'>Try again</a>");
+            return res.status(401).send("Invalid username or password <a href='/login.html'>Try again</a>");
         }
     });
 });
@@ -94,7 +115,7 @@ server.post("/api/jobs", async (req, res) => {
     const posterId = req.session.userId;
 
     db.get(
-        `SELECT COUNT(*) as count FROM jobs WHERE posterId = ?`,
+        `SELECT COUNT(*) as count FROM jobs WHERE poster_id = ?`,
         [posterId],
         (err, row) => {
             if (err) {
@@ -134,16 +155,23 @@ server.post("/api/delete", (req, res) => {
 });
 
 server.get("/api/jobs/posted", async (req, res) => {
-    const sql = `SELECT * FROM jobs 
-                WHERE LOWER(firstname) = LOWER(?)
-                AND LOWER(lastname) = LOWER(?)`;
+    const posterID = req.session.userId;
+    const firstName = req.session.firstName
+    const lastName = req.session.lastName;
 
-    db.all(sql, ["nik", "zhuk"], (err, rows) => {
+    const sql = `SELECT * FROM jobs 
+                WHERE poster_id = ?`;
+
+    db.all(sql, [posterID], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ error: "Failed to fetch jobs" });
         }        
-        res.json(rows);
+        res.json({
+            jobs: rows,
+            userFirstName: `${firstName}`,
+            userLastName: `${lastName}`
+        });
     });
 });
 
