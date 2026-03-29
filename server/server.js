@@ -60,20 +60,27 @@ db.run(`
 `);
 
 const checkLogin = (req, res, next) => {
-    if (req.session && req.session.user) {
-        next();
+    if (req.path === '/HTML/login.html' || req.path === '/login') {
+        return next(); 
+    }
+    if (req.session && req.session.userId) {
+        return next();
     } else {
         console.log("Unauthorized access attempt. Redirecting to login...");
-        res.redirect('/HTML/login.html');
+        return res.redirect('/HTML/login.html'); 
     }
 };
 
-server.get('/HTML/marketplace.html', checkLogin, (req, res, next) => {
+server.get('/HTML/marketplace.html', checkLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/HTML/marketplace.html')); 
+});
+
+server.get('/api/marketplace/jobs', checkLogin, (req, res, next) => {
     const sql = `
         SELECT 
-            jobs.id, 
             jobs.title, 
-            jobs.description, 
+            jobs.description,
+            jobs.dateCreated, 
             users.first_name, 
             users.last_name 
         FROM jobs
