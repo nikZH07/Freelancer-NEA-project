@@ -1,9 +1,7 @@
 const jobtitleInp = document.querySelector(".jobtitle");
 const jobdescriptionInp = document.querySelector(".jobdescription");
 const submitBtn = document.querySelector(".submitBtn");
-const messageF = document.querySelector(".message");
 const jobForm = document.querySelector(".jobForm");
-const deleteBtn = document.querySelector(".deleteBtn");
 const successMessage = document.querySelector(".success_m");
 const failureMessage = document.querySelector(".failure_m");
 
@@ -42,30 +40,6 @@ jobForm.addEventListener("submit", async (e) => {
     }
 });
 
-deleteBtn.addEventListener("click", async () => {
-    const deleteB = deleteBtn.innerHTML;
-    console.log(deleteB);
-
-    try {
-        const res = await fetch("http://localhost:3000/api/delete", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ deleteB })
-        })
-        if (!res.ok) throw new Error(`${res.status} ${res.statusTexts}`)
-        const data = res.json();
-        console.log(data);
-        failureMessage.classList.remove("view");
-        successMessage.classList.add("view");
-    } catch (e) {
-        console.error(e);
-        successMessage.classList.remove("view");
-        failureMessage.classList.add("view");
-    }
-});
-
 async function renderJobs() {
     try {
         const res = await fetch("http://localhost:3000/api/jobs/posted");
@@ -76,6 +50,7 @@ async function renderJobs() {
         const jobs = data.jobs;
         const firstName = data.userFirstName;
         const lastName = data.userLastName;
+        const jobId = data.id;
 
         const limit = Math.min(jobs.length, 3); 
 
@@ -84,13 +59,20 @@ async function renderJobs() {
             
             if (jobBox && jobs[i]) {
                 jobBox.classList.remove("empty_box");
+                const currentJobId = jobs[i].id;
                 
                 jobBox.innerHTML = `
                     <p class="job_title">${jobs[i].title}</p>
                     <p class="job_description">${jobs[i].description}</p>
-                    <div class="job_info">
-                        <p>by ${firstName} ${lastName}</p>
-                        <p>Posted date: ${jobs[i].dateCreated}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="job_info">
+                            <p>by ${firstName} ${lastName}</p>
+                            <p>Posted date: ${jobs[i].dateCreated}</p>
+                        </div>
+                        <div class="job_edit">
+                            <button class="edit_btn editJobBtn"><i class="fa-solid fa-pen-to-square" style="color: rgb(99, 230, 190);"></i></button>
+                            <button class="edit_btn deleteJobBtn" data-id="${currentJobId}"><i class="fa-solid fa-trash-can" style="color: rgb(255, 93, 93);"></i></button>
+                        </div>
                     </div>
                 `;
             }
@@ -99,3 +81,25 @@ async function renderJobs() {
         console.error("Failed to render jobs:", e);
     }
 };
+
+document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".deleteJobBtn");
+    
+    if (btn) {
+        const jobId = Number(btn.getAttribute("data-id"));
+        console.log("Found ID:", jobId);
+
+        const response = await fetch('/api/jobs/delete', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: jobId })
+        });
+
+        if (response.ok) {
+            console.log("Delete successful");
+            btn.closest('[class*="job_box"]').innerHTML = "<p>Job Deleted</p>";
+        } else {
+            alert("Failed to delete job.");
+        }
+    }
+});

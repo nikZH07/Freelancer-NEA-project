@@ -75,9 +75,22 @@ server.get('/HTML/marketplace.html', checkLogin, (req, res) => {
     res.sendFile(path.join(__dirname, '../client/HTML/marketplace.html')); 
 });
 
+server.get('/HTML/settings.html', checkLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/HTML/settings.html'));
+});
+
+server.get('/HTML/posted_jobs.html', checkLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/HTML/posted_jobs.html'));
+});
+
+server.get('/HTML/accepted_jobs.html', checkLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/HTML/accepted_jobs.html'));
+});
+
 server.get('/api/marketplace/jobs', checkLogin, (req, res, next) => {
     const sql = `
         SELECT 
+            jobs.id,
             jobs.title, 
             jobs.description,
             jobs.dateCreated, 
@@ -117,6 +130,18 @@ server.post("/login", (req, res) => {
     });
 });
 
+server.post("/api/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: "Could not log out" });
+        }
+        
+        res.clearCookie('connect.sid');
+        
+        res.json({ success: true });
+    });
+});
+
 server.post("/api/jobs", async (req, res) => {
     const { jobtitle, jobdescription } = req.body;
     const posterId = req.session.userId;
@@ -147,18 +172,16 @@ server.post("/api/jobs", async (req, res) => {
     );
 });
 
-server.post("/api/delete", (req, res) => {
-    const deletev = req.body.deleteB;
-    db.run(
-        'DELETE FROM jobs',
-        function(e) {
-            if (e) {
-                console.error(e.message);
-                return res.status(500).json({ error: "Failed to insert" });
-            }
-            res.json({ ok: true })
+server.delete("/api/jobs/delete", (req, res) => {
+    const sql = `DELETE FROM jobs WHERE id = ? AND poster_id = ?`;
+
+    db.run(sql, [req.body.id, req.session.userId], function(err) {
+        if (err) {
+            console.log("SQL ERROR:", err.message);
+            return res.status(500).json({ error: err.message });
         }
-    )
+        res.json({ success: true });
+    });
 });
 
 server.get("/api/jobs/posted", async (req, res) => {

@@ -8,16 +8,16 @@ async function renderMarketplace() {
 
         const data = await res.json();
 
-        data.forEach(row => {
-            jobsContainer.innerHTML += `<div class="job_box">
-                                            <p class="job_title">${row.title}</p>
-                                            <p class="job_description">${row.description}</p>
-                                            <div class="job_info">
-                                                <p>by ${row.first_name} ${row.last_name}</p>
-                                                <p>Posted date: ${row.dateCreated}</p>
-                                            </div>
-                                        </div>`  
-        });
+        data.forEach(row => {jobsContainer.innerHTML += `
+            <div class="job_box">
+                <p class="job_title">${row.title}</p>
+                <p class="job_description">${row.description}</p>
+                <div class="job_info">
+                    <p>by ${row.first_name} ${row.last_name}</p>
+                    <p>Posted date: ${row.dateCreated}</p>
+                </div>
+            </div>
+        `});
 
     } catch (e) {
         console.error("Failed to render jobs:", e);
