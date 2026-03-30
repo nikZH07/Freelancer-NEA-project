@@ -91,6 +91,10 @@ server.get("/HTML/login.html", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/HTML/login.html"));
 });
 
+server.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/HTML/login.html"));
+});
+
 server.get('/api/marketplace/jobs', checkLogin, (req, res, next) => {
     const sql = `
         SELECT 
