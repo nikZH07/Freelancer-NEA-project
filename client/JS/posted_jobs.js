@@ -2,13 +2,20 @@ const jobtitleInp = document.querySelector(".jobtitle");
 const jobdescriptionInp = document.querySelector(".jobdescription");
 const submitBtn = document.querySelector(".submitBtn");
 const jobForm = document.querySelector(".jobForm");
-const successMessage = document.querySelector(".success_m");
-const failureMessage = document.querySelector(".failure_m");
-
 
 renderJobs();
 
 setInterval(renderJobs, 5000);
+
+document.querySelector(".create_job_btn").addEventListener("click", () => {
+    document.querySelector(".create_job_menu").style.visibility = "visible";
+    document.querySelector(".hidden").classList.add("backdrop");
+});
+
+document.querySelector(".close_window_btn").addEventListener("click", () => {
+    document.querySelector(".create_job_menu").style.visibility = "hidden";
+    document.querySelector(".hidden").classList.remove("backdrop");
+});
 
 jobForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -29,14 +36,10 @@ jobForm.addEventListener("submit", async (e) => {
             throw new Error(`${res.status} ${res.statusText}`)
         } else {    
             const data = await res.json();
-            failureMessage.classList.remove("view");
-            successMessage.classList.add("view");
             jobForm.reset();
         }
     } catch (e) {
         console.error(e);
-        successMessage.classList.remove("view");
-        failureMessage.classList.add("view");
     }
 });
 

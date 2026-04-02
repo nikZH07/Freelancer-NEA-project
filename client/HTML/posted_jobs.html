@@ -30,16 +30,18 @@
 
     <!-- create job menu popup -->
 
+    <div id="modalBackdrop" class="hidden"></div>
+
     <div class="create_job_menu">
         <div class="top_layer">
-            <h1>Post a job</h1>
+            <h1 style="text-decoration: underline; font-size: 2.7rem;">Post a job</h1>
             <button class="close_window_btn"><i class="fa-solid fa-x" style="color: rgb(255, 255, 255);"></i></button>
         </div>
         <div class="middle_layer">
             <form class="jobForm">
-                <input type="text" name="jobtitle" placeholder="job title:" class="jobtitle" required>
-                <input type="text" name="jobdescription" placeholder="job description:" class="jobdescription" required>
-                <button type="submit">Submit</button>
+                <input type="text" name="jobtitle" placeholder="Job title:" class="jobtitle job_info_inp" required>
+                <input type="text" name="jobdescription" placeholder="Job description:" class="jobdescription job_info_inp" required>
+                <button type="submit" class="job_post_submit">Submit</button>
             </form>
         </div>
     </div>
@@ -84,32 +86,10 @@
         </div>
     </div>
 
-    <!-- create job overlay menu -->
+    <!-- success/failure messages -->
 
-    <h1>Post a job</h1>
-    <form class="jobForm">
-        <input type="text" name="jobtitle" placeholder="job title:" class="jobtitle" required>
-        <input type="text" name="jobdescription" placeholder="job description:" class="jobdescription" required>
-        <button type="submit">Submit</button>
-    </form>
-    <p class="message"></p>
-    <input type="text" placeholder="enter job name" class="jobToChange"> 
-    <button class="changeAvailability">change availability</button>
 
-    <div class="status_message success_m">
-        <p>Success</p>
-        <button>
-            <img src="../images/xmark-solid-full (1).svg" class="close_btn">
-        </button>
-    </div>
-
-    <div class="status_message failure_m" style="background-color: red;;">
-        <p>Failure</p>
-        <button>
-            <img src="../images/xmark-solid-full (1).svg" class="close_btn">
-        </button>
-    </div>
-
+    
     <script src="../JS/posted_jobs.js"></script>
     
 </body>
