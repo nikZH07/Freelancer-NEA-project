@@ -12,6 +12,24 @@ document.querySelector(".create_job_btn").addEventListener("click", () => {
     document.querySelector(".hidden").classList.add("backdrop");
 });
 
+document.querySelector(".add_btn_in1").addEventListener("click", () => {
+    document.querySelector(".create_job_menu").style.visibility = "visible";
+    document.querySelector(".hidden").classList.add("backdrop");
+});
+document.querySelector(".add_btn_in2").addEventListener("click", () => {
+    document.querySelector(".create_job_menu").style.visibility = "visible";
+    document.querySelector(".hidden").classList.add("backdrop");
+});
+document.querySelector(".add_btn_in3").addEventListener("click", () => {
+    document.querySelector(".create_job_menu").style.visibility = "visible";
+    document.querySelector(".hidden").classList.add("backdrop");
+});
+
+document.querySelector(".hidden").addEventListener("click", () => {
+    document.querySelector(".create_job_menu").style.visibility = "hidden";
+    document.querySelector(".hidden").classList.remove("backdrop");
+});
+
 document.querySelector(".close_window_btn").addEventListener("click", () => {
     document.querySelector(".create_job_menu").style.visibility = "hidden";
     document.querySelector(".hidden").classList.remove("backdrop");

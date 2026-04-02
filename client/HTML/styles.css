@@ -154,20 +154,20 @@ p {
     opacity: 0.8;
 }
 
-.add_btn_in {
+.add_btn_in1, .add_btn_in2, .add_btn_in3 {
     border: none;
     height: 2rem;
     width: 2rem;
     font-size: 1.5rem;
     border-radius: 1rem;
     cursor: pointer;
+    transition: transform 0.25s;
 }
 
-.add_btn_in:hover {
-    height: 3rem;
-    width: 3rem;
-    border-radius: 1.5rem;
-    font-size: 2.25rem;
+.add_btn_in1:hover,
+.add_btn_in2:hover,
+.add_btn_in3:hover {
+    transform: scale(1.1);
 }
 
 /* create job overlay menu */
@@ -262,11 +262,21 @@ p {
 
 .close_window_btn {
     border: none;
-    background-color: red;
     height: 2rem;
+    background-color: red;
     width: 2rem;
     border-radius: 1rem;
     cursor: pointer;
+    transition: transform 0.5s;
+}
+
+.close_window_btn:hover {
+    text-shadow: 
+        0 0 5px  #ff3333,
+        0 0 10px #ff3333,
+        0 0 30px #ff3333,
+        0 0 60px #cc0000;
+    transform: scale(1.1);
 }
 
 .top_layer {
@@ -300,6 +310,12 @@ p {
     border-radius: 0.5rem;
     background-color: rgb(0, 255, 0);
     border: none;
+    cursor: pointer;
+    transition: transform 0.5s;
+}
+
+.job_post_submit:hover {
+    transform: scale(1.05);
 }
 
 /* settings tab */
@@ -358,7 +374,7 @@ p {
     padding-bottom: 0.3rem;
 }
 
-.fa-pen-to-square, .fa-trash-can {
+.fa-pen-to-square, .fa-trash-can, .fa-x {
     transition: all 0.3s ease;
     cursor: pointer;
 }
