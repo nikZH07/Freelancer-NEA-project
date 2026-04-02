@@ -50,7 +50,6 @@ async function renderJobs() {
         const jobs = data.jobs;
         const firstName = data.userFirstName;
         const lastName = data.userLastName;
-        const jobId = data.id;
 
         const limit = Math.min(jobs.length, 3); 
 
@@ -64,6 +63,7 @@ async function renderJobs() {
                 jobBox.innerHTML = `
                     <p class="job_title">${jobs[i].title}</p>
                     <p class="job_description">${jobs[i].description}</p>
+                    <p>Accepted by: ${jobs[i].worker_first_name} ${jobs[i].worker_last_name}</p>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div class="job_info">
                             <p>by ${firstName} ${lastName}</p>

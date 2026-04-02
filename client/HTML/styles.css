@@ -222,13 +222,36 @@ p {
 .edit_btn {
     background: none; 
     border: none; 
-    cursor: pointer;
 }
 
 .job_edit {
     display: flex; 
     flex-direction: column; 
     gap: 0.4rem;
+}
+
+.create_job_menu {
+    background-color: #0b1424;
+    width: 30%;
+    color: white;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    height: 50vh;
+    position: fixed;
+    top: 25%;
+    left: 35%;
+    backdrop-filter: blur(80px);
+
+}
+
+.close_window_btn {
+    border: none;
+    background: none;
+    cursor: pointer;
 }
 
 /* settings tab */
@@ -260,4 +283,74 @@ p {
     padding: 2rem 1.2rem;
     font-size: 1.5rem;
     border-radius: 1rem;
+    transition: box-shadow 1s;
+    cursor: pointer;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.job_apply_btn {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    border: none;
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    width: 100%;
+    transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
+}
+
+.job_box:hover .job_apply_btn {
+    opacity: 1;
+    max-height: 50px; 
+    margin-top: 1rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+}
+
+.fa-pen-to-square, .fa-trash-can {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.fa-pen-to-square {
+    color: #00ffcc;
+    
+    text-shadow: 
+        0 0 5px  #00ffcc,  
+        0 0 10px #00ffcc,  
+        0 0 20px #00ffcc,  
+        /* 0 0 40px #00e6b8; glow with no hover */
+}
+
+.fa-trash-can {
+    color: #ff3333; 
+    
+    text-shadow: 
+        0 0 5px  #ff3333,
+        0 0 10px #ff3333,
+        0 0 20px #ff3333,
+        /* 0 0 40px #cc0000; glow with no hover */
+}
+
+.fa-pen-to-square:hover {
+    color: #fff; 
+    text-shadow: 
+        0 0 5px  #00ffcc,
+        0 0 10px #00ffcc,
+        0 0 30px #00ffcc, 
+        0 0 60px #00e6b8;
+    transform: scale(1.1); 
+}
+
+.fa-trash-can:hover {
+    color: #fff;
+    text-shadow: 
+        0 0 5px  #ff3333,
+        0 0 10px #ff3333,
+        0 0 30px #ff3333,
+        0 0 60px #cc0000;
+    transform: scale(1.1);
 }

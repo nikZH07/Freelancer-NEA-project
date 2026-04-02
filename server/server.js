@@ -38,15 +38,17 @@ db.run(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         
         poster_id INTEGER, 
-        worker_id INTEGER,
-
         title TEXT NOT NULL,
         description TEXT NOT NULL,
+
+        worker_id INTEGER DEFAULT NULL,
+        pending_worker INTEGER DEFAULT NULL,        
         status TEXT DEFAULT 'available',
         dateCreated TEXT DEFAULT (date('now')),
-                
+
         FOREIGN KEY (poster_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (worker_id) REFERENCES users(id) ON DELETE CASCADE
+        FOREIGN KEY (worker_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (pending_worker) REFERENCES users(id) ON DELETE CASCADE
     )
 `);
 
@@ -96,12 +98,17 @@ server.get("/login", (req, res) => {
 });
 
 server.get('/api/marketplace/jobs', checkLogin, (req, res, next) => {
+    const posterID = req.session.userId;
+    const firstName = req.session.firstName
+    const lastName = req.session.lastName;
+
     const sql = `
         SELECT 
             jobs.id,
             jobs.title, 
             jobs.description,
             jobs.dateCreated, 
+            jobs.status,
             users.first_name, 
             users.last_name 
         FROM jobs
@@ -133,7 +140,7 @@ server.post("/login", (req, res) => {
             req.session.lastName = user.last_name;
             res.redirect('/HTML/marketplace.html');
         } else {
-            return res.status(401).send("Invalid username or password <a href='/login.html'>Try again</a>");
+            return res.status(401).send("Invalid username or password <a href='/HTML/login.html'>Try again</a>");
         }
     });
 });
@@ -197,8 +204,11 @@ server.get("/api/jobs/posted", async (req, res) => {
     const firstName = req.session.firstName
     const lastName = req.session.lastName;
 
-    const sql = `SELECT * FROM jobs 
-                WHERE poster_id = ?`;
+    const sql = `
+        SELECT j.*, u.first_name AS worker_first_name, u.last_name AS worker_last_name 
+        FROM jobs j
+        LEFT JOIN users u ON j.worker_id = u.id
+        WHERE j.poster_id = ?`;
 
     db.all(sql, [posterID], (err, rows) => {
         if (err) {
@@ -211,6 +221,25 @@ server.get("/api/jobs/posted", async (req, res) => {
             userLastName: `${lastName}`
         });
     });
+});
+
+
+
+server.post("/api/job/apply", (req, res) => {
+    const workerId = req.session.userId;
+    const jobId = req.body.id;
+
+    const sql = `UPDATE jobs SET 
+                    status = "pending", pending_worker = ?
+                    WHERE id = ?`;
+
+    db.run(sql, [workerId, jobId], function(err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: "Failed to fetch jobs" });
+        }
+        res.json({ success: true });
+    })
 });
 
 server.get("/api/health", (req, res) => res.json({ ok: true }));
