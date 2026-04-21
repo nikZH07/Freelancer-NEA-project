@@ -80,22 +80,38 @@ async function renderJobs() {
             if (jobBox && jobs[i]) {
                 jobBox.classList.remove("empty_box");
                 const currentJobId = jobs[i].id;
-                
-                jobBox.innerHTML = `
-                    <p class="job_title">${jobs[i].title}</p>
-                    <p class="job_description">${jobs[i].description}</p>
-                    <p>Accepted by: ${jobs[i].worker_first_name} ${jobs[i].worker_last_name}</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="job_info">
-                            <p>by ${firstName} ${lastName}</p>
-                            <p>Posted date: ${jobs[i].dateCreated}</p>
-                        </div>
-                        <div class="job_edit">
-                            <button class="edit_btn editJobBtn"><i class="fa-solid fa-pen-to-square" style="color: rgb(99, 230, 190);"></i></button>
-                            <button class="edit_btn deleteJobBtn" data-id="${currentJobId}"><i class="fa-solid fa-trash-can" style="color: rgb(255, 93, 93);"></i></button>
-                        </div>
-                    </div>
-                `;
+
+                if (jobs[i].applier_first_name === null && jobs[i].applier_last_name === null) {
+                    jobBox.innerHTML = `
+                        <p class="job_title">${jobs[i].title}</p>
+                        <p class="job_description">${jobs[i].description}</p>
+                        <p>Accepted by: Pending</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="job_info">
+                                <p>by ${firstName} ${lastName}</p>
+                                <p>Posted date: ${jobs[i].dateCreated}</p>
+                            </div>
+                            <div class="job_edit">
+                                <button class="edit_btn editJobBtn"><i class="fa-solid fa-pen-to-square" style="color: rgb(99, 230, 190);"></i></button>
+                                <button class="edit_btn deleteJobBtn" data-id="${currentJobId}"><i class="fa-solid fa-trash-can" style="color: rgb(255, 93, 93);"></i></button>
+                            </div>
+                        </div>`
+                } else {
+                    jobBox.innerHTML = `
+                        <p class="job_title">${jobs[i].title}</p>
+                        <p class="job_description">${jobs[i].description}</p>
+                        <p>Accepted by: ${jobs[i].applier_first_name} ${jobs[i].applier_last_name}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="job_info">
+                                <p>by ${firstName} ${lastName}</p>
+                                <p>Posted date: ${jobs[i].dateCreated}</p>
+                            </div>
+                            <div class="job_edit">
+                                <button class="edit_btn editJobBtn"><i class="fa-solid fa-pen-to-square" style="color: rgb(99, 230, 190);"></i></button>
+                                <button class="edit_btn deleteJobBtn" data-id="${currentJobId}"><i class="fa-solid fa-trash-can" style="color: rgb(255, 93, 93);"></i></button>
+                            </div>
+                        </div>`
+                }
             }
         }
     } catch (e) {

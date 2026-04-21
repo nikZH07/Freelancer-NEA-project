@@ -10,7 +10,7 @@ const PORT = 3000;
 
 server.use(
     session({
-        secret: "top_secret_key_init",
+        secret: "+8U9`$rHm9K{jeI9)A,DzCe|c",
         saveUninitialized: false,
         resave: false,
         cookie: {
@@ -207,9 +207,9 @@ server.get("/api/jobs/posted", async (req, res) => {
     const lastName = req.session.lastName;
 
     const sql = `
-        SELECT j.*, u.first_name AS worker_first_name, u.last_name AS worker_last_name 
+        SELECT j.*, u.first_name AS applier_first_name, u.last_name AS applier_last_name 
         FROM jobs j
-        LEFT JOIN users u ON j.worker_id = u.id
+        LEFT JOIN users u ON j.pending_worker = u.id
         WHERE j.poster_id = ?`;
 
     db.all(sql, [posterID], (err, rows) => {
