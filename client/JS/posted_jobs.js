@@ -81,11 +81,38 @@ async function renderJobs() {
                 jobBox.classList.remove("empty_box");
                 const currentJobId = jobs[i].id;
 
-                if (jobs[i].applier_first_name === null && jobs[i].applier_last_name === null) {
+                if (jobs[i].worker_id === null && jobs[i].pending_worker === null) {
                     jobBox.innerHTML = `
                         <p class="job_title">${jobs[i].title}</p>
                         <p class="job_description">${jobs[i].description}</p>
-                        <p>Accepted by: Pending</p>
+
+                        <div class="applyer_box">
+                            <p class="accepted_by">Accepted by: <b>Pending</b></p>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="job_info">
+                                <p>by ${firstName} ${lastName}</p>
+                                <p>Posted date: ${jobs[i].dateCreated}</p>
+                            </div>
+                            <div class="job_edit">
+                                <button class="edit_btn editJobBtn"><i class="fa-solid fa-pen-to-square" style="color: rgb(99, 230, 190);"></i></button>
+                                <button class="edit_btn deleteJobBtn" data-id="${currentJobId}"><i class="fa-solid fa-trash-can" style="color: rgb(255, 93, 93);"></i></button>
+                            </div>
+                        </div>`
+                } else if (jobs[i].worker_id === null && jobs[i].pending_worker !== null) {
+                    jobBox.innerHTML = `
+                        <p class="job_title">${jobs[i].title}</p>
+                        <p class="job_description">${jobs[i].description}</p>
+                        <div class="applyer_box">
+                            <p class="accepted_by">Accepted by: <b>${jobs[i].applier_first_name} ${jobs[i].applier_last_name}</b></p>
+
+                            <div class="decision_box">
+                                <button class="view_profile_btn viewProfileBtn" data-id="${currentJobId}">View profile</button>
+                                <button class="accept_worker_btn acceptWorkerBtn" data-id="${currentJobId}">Accept worker</button>
+                                <button class="decline_worker_btn declineWorkerBtn" data-id="${currentJobId}">Decline worker</button>
+                            </div>
+                        </div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="job_info">
                                 <p>by ${firstName} ${lastName}</p>
@@ -100,7 +127,11 @@ async function renderJobs() {
                     jobBox.innerHTML = `
                         <p class="job_title">${jobs[i].title}</p>
                         <p class="job_description">${jobs[i].description}</p>
-                        <p>Accepted by: ${jobs[i].applier_first_name} ${jobs[i].applier_last_name}</p>
+
+                        <div class="applyer_box">
+                            <p class="accepted_by">Job is in progress<br><br>The result of job will appear here</p>
+                        </div>
+                        
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="job_info">
                                 <p>by ${firstName} ${lastName}</p>
@@ -118,6 +149,52 @@ async function renderJobs() {
         console.error("Failed to render jobs:", e);
     }
 };
+
+document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".acceptWorkerBtn");
+    const applyerBox = e.target.closest(".applyer_box");
+
+    if (btn) {
+        const jobId = Number(btn.getAttribute("data-id"));
+        console.log("Found ID:", jobId);
+
+        const res = await fetch("/api/jobs/pending/worker/accept", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: jobId })
+        })
+
+        if (res.ok) {
+            console.log("Accepted successfuly");
+            applyerBox.innerHTML = "Job is in progress by a worker of your choice.";
+        } else {
+            alert("Failed to accept worker.");
+        }
+    }
+});
+
+document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".declineWorkerBtn");
+    const applyerBox = e.target.closest(".applyer_box");
+
+    if (btn) {
+        const jobId = Number(btn.getAttribute("data-id"));
+        console.log("Found ID:", jobId);
+
+        const res = await fetch("/api/jobs/pending/worker/decline", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: jobId })
+        })
+
+        if (res.ok) {
+            console.log("Declined successfuly");
+            applyerBox.innerHTML = "Worker succesfully declined from this job.";
+        } else {
+            alert("Failed to decline worker.");
+        }
+    }
+});
 
 document.addEventListener("click", async (e) => {
     const btn = e.target.closest(".deleteJobBtn");

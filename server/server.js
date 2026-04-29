@@ -225,14 +225,53 @@ server.get("/api/jobs/posted", async (req, res) => {
     });
 });
 
+server.post("/api/jobs/pending/worker/accept", (req, res) => {
+    const jobId = req.body.id;
 
+    const sql = `
+        UPDATE JOBS
+        SET 
+            status = 'unavailable',
+            worker_id = pending_worker,
+            pending_worker = NULL
+        WHERE id = ?;
+    `
+
+    db.run(sql, [jobId], function(err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: "Failed to accept worker" });
+        }
+        res.json({ success: true });
+    })
+});
+
+server.post("/api/jobs/pending/worker/decline", (req, res) => {
+    const jobId = req.body.id;
+
+    const sql = `
+        UPDATE JOBS
+        SET 
+            status = 'available',
+            pending_worker = NULL
+        WHERE id = ?;
+    `
+
+    db.run(sql, [jobId], function(err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: "Failed to accept worker" });
+        }
+        res.json({ success: true });
+    })
+});
 
 server.post("/api/job/apply", (req, res) => {
     const workerId = req.session.userId;
     const jobId = req.body.id;
 
     const sql = `UPDATE jobs SET 
-                    status = "pending", pending_worker = ?
+                    status = "applied", pending_worker = ?
                     WHERE id = ?`;
 
     db.run(sql, [workerId, jobId], function(err) {

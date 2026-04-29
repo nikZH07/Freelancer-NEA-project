@@ -154,6 +154,67 @@ p {
     opacity: 0.8;
 }
 
+.decision_box {
+    display: flex;
+    justify-content: start;
+    align-items: self-start;
+    gap: 0.3rem;
+}
+
+.view_profile_btn,
+.accept_worker_btn,
+.decline_worker_btn {
+    font-family: "Montserrat";
+    background: none;
+    color: rgb(0, 0, 0);
+    border: none;
+    font-size: 1rem;
+    height: 2.3rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.view_profile_btn {
+    background-color: rgb(255, 213, 0);
+}
+
+.accept_worker_btn {
+    background-color: rgb(87, 255, 87);
+}
+
+.decline_worker_btn {
+    background-color: red;
+}
+
+.accepted_by {
+    margin-bottom: 1rem;
+}
+
+.view_profile_btn,
+.accept_worker_btn,
+.decline_worker_btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.view_profile_btn:hover,
+.accept_worker_btn:hover,
+.decline_worker_btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.view_profile_btn:hover {
+    box-shadow: 0 0 15px rgba(255, 213, 0, 0.7);
+}
+
+.accept_worker_btn:hover {
+    box-shadow: 0 0 15px rgba(87, 255, 87, 0.7);
+}
+
+.decline_worker_btn:hover {
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+}
+
 .add_btn_in1, .add_btn_in2, .add_btn_in3 {
     border: none;
     height: 2rem;

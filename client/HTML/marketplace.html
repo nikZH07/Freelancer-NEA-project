@@ -12,6 +12,22 @@
 </head>
 <body>
     
+    <div id="modalBackdrop" class="hidden"></div>
+
+    <div class="create_job_menu">
+        <div class="top_layer">
+            <h1 style="text-decoration: underline; font-size: 2.7rem;">Post a job</h1>
+            <button class="close_window_btn"><i class="fa-solid fa-x" style="color: rgb(255, 255, 255);"></i></button>
+        </div>
+        <div class="middle_layer">
+            <form class="jobForm">
+                <input type="text" name="jobtitle" placeholder="Job title:" class="jobtitle job_info_inp" required>
+                <input type="text" name="jobdescription" placeholder="Job description:" class="jobdescription job_info_inp" required>
+                <button type="submit" class="job_post_submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
     <!-- nav bar -->
 
     <div class="wrapper_outer">
