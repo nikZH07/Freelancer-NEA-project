@@ -3,9 +3,9 @@ const jobdescriptionInp = document.querySelector(".jobdescription");
 const submitBtn = document.querySelector(".submitBtn");
 const jobForm = document.querySelector(".jobForm");
 
-renderJobs();
+renderPostedJobs();
 
-setInterval(renderJobs, 5000);
+setInterval(renderPostedJobs, 5000);
 
 document.querySelector(".create_job_btn").addEventListener("click", () => {
     document.querySelector(".create_job_menu").style.visibility = "visible";
@@ -61,7 +61,19 @@ jobForm.addEventListener("submit", async (e) => {
     }
 });
 
-async function renderJobs() {
+async function renderAcceptedJobs() {
+    try {
+        const res = await fetch("http://localhost:3000/api/jobs/accepted");
+        if (!res.ok) throw new Error(`${res.status}`);
+        
+        const data = await res.json(); 
+
+    } catch(e) {
+
+    }
+}
+
+async function renderPostedJobs() {
     try {
         const res = await fetch("http://localhost:3000/api/jobs/posted");
         if (!res.ok) throw new Error(`${res.status}`);

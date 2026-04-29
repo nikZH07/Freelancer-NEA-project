@@ -127,14 +127,15 @@ server.get('/api/marketplace/jobs', checkLogin, (req, res, next) => {
 server.use(express.static(path.join(__dirname, '../client')));
 
 server.post("/login", (req, res) => {
-    const {username, password} = req.body;
+    let {username, password} = req.body;
+    username = username ? username.trim(): "";
+    password = password ? password.trim(): ""; 
 
     db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
         if (err) {
             console.error(err);
             return res.status(500).send("Database error");
         }
-
         if (user && user.password === password) {
             req.session.userId = user.id;
             req.session.user = user.username;
@@ -144,6 +145,45 @@ server.post("/login", (req, res) => {
         } else {
             return res.status(401).send("Invalid username or password <a href='/HTML/login.html'>Try again</a>");
         }
+    });
+});
+
+server.post('/register', (req, res) => {
+    const { fname, lname, phone, password, headline, category, bio, years } = req.body;
+    
+    // Generate the username: first 3 of fname + first 2 of lname
+    const usernamePart = (fname.substring(0, 3) + lname.substring(0, 2)).toLowerCase();
+
+    // The order here MUST match the order in the array below
+    const sql = `INSERT INTO users 
+        (username, password, first_name, last_name, phone_num, job_title, industry, bio, years_experience) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    // Wrap in function(err) instead of (err) => to use this.lastID
+    db.run(sql, [
+        usernamePart, // Matches 'username'
+        password,     // Matches 'password'
+        fname,        // Matches 'first_name'
+        lname,        // Matches 'last_name'
+        phone,        // Matches 'phone_num'
+        headline,     // Matches 'job_title'
+        category,     // Matches 'industry'
+        bio,          // Matches 'bio'
+        years         // Matches 'years_experience'
+    ], function(err) { // <--- USE 'function' NOT '=>'
+        if (err) {
+            console.error("Database Error:", err.message);
+            return res.status(500).send("Mission Failure: Could not save profile.");
+        }
+
+        // Create the session
+        req.session.userId = this.lastID; // this.lastID only works with function(err)
+        req.session.user = usernamePart;
+        req.session.firstName = fname;
+        req.session.lastName = lname;
+
+        console.log(`New user registered: ${usernamePart}`);
+        res.redirect('/HTML/marketplace.html');
     });
 });
 
