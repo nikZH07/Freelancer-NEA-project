@@ -480,4 +480,79 @@ p {
     transform: scale(1.1);
 }
 
+#profileModal {
+    /* ... your existing positioning ... */
+    
+    background-color: #1a2634 !important; /* A solid dark blue/grey */
+    color: #ffffff !important;           /* Pure white text */
+    opacity: 1 !important;               /* Ensure it's not see-through */
+    visibility: visible !important;      /* Ensure it's not hidden */
+    border: 2px solid #3498db !important;
+    
+    /* Make sure it has a physical size */
+    min-width: 400px !important;
+    min-height: 200px !important;
+    z-index: 2000 !important;
+}
 
+/* Ensure the layers inside are also visible */
+#profileModal .top_layer, 
+#profileModal .middle_layer {
+    display: block !important;
+    opacity: 1 !important;
+    color: white !important;
+}
+
+#modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    z-index: 1000 !important;
+}
+
+.middle_layer {
+    padding: 25px;
+    color: white;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.profile-field {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #2c3e50;
+    padding-bottom: 8px;
+}
+
+.profile-label {
+    color: #3498db;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    display: block;
+}
+
+.profile-value {
+    font-size: 1.1rem;
+    display: block;
+    margin-top: 4px;
+}
+
+.close_profile_btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.close_profile_btn:hover {
+    transform: scale(1.2);
+}
+
+.hidden {
+    display: none !important;
+}

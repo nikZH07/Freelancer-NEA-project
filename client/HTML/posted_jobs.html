@@ -45,6 +45,28 @@
         </div>
     </div>
 
+    <!-- view profile menu popup -->
+
+    <div id="profileModal" class="create_job_menu hidden">
+        <div class="top_layer">
+            <h1 style="text-decoration: underline; font-size: 2.7rem;">Worker Profile</h1>
+            <button class="close_profile_btn"><i class="fa-solid fa-x" style="color: white;"></i></button>
+        </div>
+        <div class="middle_layer" style="color: white; padding: 20px;">
+            <h2 id="p_name" style="margin-bottom: 5px;">Loading...</h2>
+            <p id="p_title" style="color: #3498db; font-weight: bold; margin-bottom: 15px;"></p>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;">
+                <p><strong>Industry:</strong> <span id="p_industry"></span></p>
+                <p><strong>Experience:</strong> <span id="p_exp"></span> years</p>
+                <p><strong>Phone:</strong> <span id="p_phone"></span></p>
+                <hr style="border: 0.5px solid #444; margin: 15px 0;">
+                <p><strong>Bio:</strong></p>
+                <p id="p_bio" style="font-style: italic; color: #ccc;"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- main page -->
 
     <h1 class="jobsHeader">My posted jobs</h1>

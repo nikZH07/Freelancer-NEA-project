@@ -35,6 +35,56 @@ document.querySelector(".close_window_btn").addEventListener("click", () => {
     document.querySelector(".hidden").classList.remove("backdrop");
 });
 
+// 1. THE TRIGGER (Watches for clicks on ANY "View Profile" button)
+document.addEventListener('click', async (event) => {
+    if (event.target.classList.contains('view_profile_btn')) {
+        const workerId = event.target.getAttribute('data-id');
+        console.log("Button clicked! Target ID:", workerId);
+        
+        if (workerId) {
+            await openProfile(workerId);
+        }
+    }
+});
+
+// 2. THE LOGIC (Fetches and displays)
+async function openProfile(workerId) {
+    try {
+        const response = await fetch(`/api/worker/${workerId}`);
+        if (!response.ok) throw new Error("Worker not found in DB");
+        
+        const worker = await response.json();
+        console.log("Data received:", worker);
+
+        // Fill the labels - Check these IDs match your HTML exactly!
+        document.getElementById('p_name').innerText = (worker.first_name || '') + " " + (worker.last_name || '');
+        document.getElementById('p_industry').innerText = worker.industry || "N/A";
+        document.getElementById('p_exp').innerText = worker.years_experience || "0";
+        document.getElementById('p_phone').innerText = worker.phone_num || "No Phone";
+        document.getElementById('p_bio').innerText = worker.bio || "No bio provided.";
+
+        // Show the elements
+        const modal = document.getElementById('profileModal');
+        const backdrop = document.getElementById('modalBackdrop');
+        
+        modal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+        modal.style.display = 'block';
+        backdrop.style.display = 'block';
+
+    } catch (err) {
+        console.error("Error opening profile:", err);
+    }
+}
+
+// 3. THE CLOSE (The X button)
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.close_profile_btn') || e.target.id === 'modalBackdrop') {
+        document.getElementById('profileModal').style.display = 'none';
+        document.getElementById('modalBackdrop').style.display = 'none';
+    }
+});
+
 jobForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     console.log("form intercepted")
@@ -120,7 +170,7 @@ async function renderPostedJobs() {
                             <p class="accepted_by">Accepted by: <b>${jobs[i].applier_first_name} ${jobs[i].applier_last_name}</b></p>
 
                             <div class="decision_box">
-                                <button class="view_profile_btn viewProfileBtn" data-id="${currentJobId}">View profile</button>
+                                <button class="view_profile_btn viewProfileBtn" data-id="${jobs[i].pending_worker}">View profile</button>
                                 <button class="accept_worker_btn acceptWorkerBtn" data-id="${currentJobId}">Accept worker</button>
                                 <button class="decline_worker_btn declineWorkerBtn" data-id="${currentJobId}">Decline worker</button>
                             </div>
@@ -161,6 +211,8 @@ async function renderPostedJobs() {
         console.error("Failed to render jobs:", e);
     }
 };
+
+
 
 document.addEventListener("click", async (e) => {
     const btn = e.target.closest(".acceptWorkerBtn");

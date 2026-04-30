@@ -199,6 +199,21 @@ server.post("/api/logout", (req, res) => {
     });
 });
 
+server.get('/api/worker/:id', (req, res) => {
+    const workerId = req.params.id;
+    console.log("Searching for worker ID:", workerId);
+
+    db.get("SELECT * FROM users WHERE id = ?", [workerId], (err, row) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ error: "Database error" });
+        }
+        if (!row) {
+            return res.status(404).json({ error: "Worker not found" });
+        }
+        res.json(row);
+    });
+});
 server.post("/api/jobs", async (req, res) => {
     const { jobtitle, jobdescription } = req.body;
     const posterId = req.session.userId;
