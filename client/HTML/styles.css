@@ -520,6 +520,108 @@ p {
     max-height: 70vh;
     overflow-y: auto;
 }
+.jobs_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.neon_confirm_btn {
+    background: transparent;
+    color: #63e6be;
+    border: 2px solid #63e6be;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 5px rgba(99, 230, 190, 0.2), 
+                inset 0 0 5px rgba(99, 230, 190, 0.1);
+}
+
+.neon_confirm_btn:hover {
+    background-color: #63e6be;
+    color: #12192b;
+    box-shadow: 0 0 15px rgba(99, 230, 190, 0.6);
+    transform: scale(1.05);
+}
+
+.job_footer_flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+}
+
+.job_box_accepted {
+    background-color: #12192b;
+    color: white;
+    width: 380px;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.job_title_text {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.job_desc_text {
+    font-size: 0.95rem;
+    color: #b9bfc9;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    min-height: 50px;
+}
+
+.applier_box_accepted {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.accepted_by_text {
+    font-size: 0.9rem;
+    color: #ffffff;
+}
+
+.accepted_by_text b {
+    color: #63e6be;
+}
+
+.job_footer_flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+}
+
+.job_info_details p {
+    font-size: 0.8rem;
+    color: #8a929e;
+    margin: 2px 0;
+}
+
+.job_edit_icons {
+    display: flex;
+    gap: 15px;
+}
+
+.job_edit_icons i {
+    font-size: 1.1rem;
+    cursor: pointer;
+}
 
 .profile-field {
     margin-bottom: 15px;

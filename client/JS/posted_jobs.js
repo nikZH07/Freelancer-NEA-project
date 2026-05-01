@@ -4,6 +4,7 @@ const submitBtn = document.querySelector(".submitBtn");
 const jobForm = document.querySelector(".jobForm");
 
 renderPostedJobs();
+loadAcceptedMissions();
 
 setInterval(renderPostedJobs, 5000);
 
@@ -56,14 +57,12 @@ async function openProfile(workerId) {
         const worker = await response.json();
         console.log("Data received:", worker);
 
-        // Fill the labels - Check these IDs match your HTML exactly!
         document.getElementById('p_name').innerText = (worker.first_name || '') + " " + (worker.last_name || '');
         document.getElementById('p_industry').innerText = worker.industry || "N/A";
         document.getElementById('p_exp').innerText = worker.years_experience || "0";
         document.getElementById('p_phone').innerText = worker.phone_num || "No Phone";
         document.getElementById('p_bio').innerText = worker.bio || "No bio provided.";
 
-        // Show the elements
         const modal = document.getElementById('profileModal');
         const backdrop = document.getElementById('modalBackdrop');
         
@@ -77,13 +76,71 @@ async function openProfile(workerId) {
     }
 }
 
-// 3. THE CLOSE (The X button)
 document.addEventListener('click', (e) => {
     if (e.target.closest('.close_profile_btn') || e.target.id === 'modalBackdrop') {
         document.getElementById('profileModal').style.display = 'none';
         document.getElementById('modalBackdrop').style.display = 'none';
     }
 });
+async function loadAcceptedMissions() {
+    const container = document.getElementById('acceptedJobsContainer');
+    
+    try {
+        const response = await fetch('/api/my-accepted-jobs');
+        const jobs = await response.json();
+
+        if (jobs.length === 0) {
+            container.innerHTML = `<p style="color:white;">No accepted jobs found.</p>`;
+            return;
+        }
+
+        container.innerHTML = ''; 
+
+        jobs.forEach(job => {
+            const jobBox = document.createElement('div');
+            jobBox.className = 'job_box_accepted';
+            
+            jobBox.innerHTML = `
+                <p class="job_title_text">${job.title}</p>
+                <p class="job_desc_text">${job.description}</p>
+                
+                <div class="applier_box_accepted">
+                    <p class="accepted_by_text">Accepted by: <b>${job.first_name} ${job.last_name}</b></p>
+                    <p style="font-size: 0.8rem; color: #8a929e; margin-top: 5px;">
+                        Contact: ${job.phone_num || 'Private'}
+                    </p>
+                </div>
+
+                <div class="job_footer_flex">
+                    <div class="job_info_details">
+                        <p>by ${job.first_name} ${job.last_name}</p>
+                        <p>Posted date: ${job.dateCreated}</p>
+                    </div>
+                    <button class="neon_confirm_btn" onclick="confirmJob(${job.id}, this)">
+                        CONFIRM
+                    </button>
+                </div>
+            `;
+            container.appendChild(jobBox);
+        });
+    } catch (err) {
+        console.error("Fetch error:", err);
+    }
+}
+
+async function confirmJob(jobId, element) {
+    if (!confirm("Are you sure you want to confirm and finish this mission?")) return;
+
+    const response = await fetch(`/api/finish-job/${jobId}`, { method: 'DELETE' });
+    const result = await response.json();
+
+    if (result.success) {
+        // Smoothly remove the box from the UI without reloading
+        element.closest('.job_box_accepted').remove();
+    } else {
+        alert("Error completing mission.");
+    }
+}
 
 jobForm.addEventListener("submit", async (e) => {
     e.preventDefault();

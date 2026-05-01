@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
 const session = require("express-session");
+const bcrypt = require('bcrypt');
 const path = require("path");
 
 const server = express();
@@ -75,6 +76,9 @@ const checkLogin = (req, res, next) => {
     }
 };
 
+// db.run(`DELETE FROM users`)
+// db.run(`DELETE FROM jobs`)
+
 server.get('/HTML/marketplace.html', checkLogin, (req, res) => {
     res.sendFile(path.join(__dirname, '../client/HTML/marketplace.html')); 
 });
@@ -132,58 +136,65 @@ server.post("/login", (req, res) => {
     password = password ? password.trim(): ""; 
 
     db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("Database error");
-        }
-        if (user && user.password === password) {
-            req.session.userId = user.id;
-            req.session.user = user.username;
-            req.session.firstName = user.first_name;
-            req.session.lastName = user.last_name;
-            res.redirect('/HTML/marketplace.html');
+        if (err) return res.status(500).send("Database error");
+        
+        if (user) {
+            bcrypt.compare(password, user.password, (err, isMatch) => {
+                if (err) return res.status(500).send("Comparison error");
+
+                if (isMatch) {
+                    req.session.userId = user.id;
+                    req.session.user = user.username;
+                    req.session.firstName = user.first_name;
+                    req.session.lastName = user.last_name;
+                    res.redirect('/HTML/marketplace.html');
+                } else {
+                    return res.status(401).send("Invalid credentials. <a href='/HTML/login.html'>Try again</a>");
+                }
+            });
         } else {
-            return res.status(401).send("Invalid username or password <a href='/HTML/login.html'>Try again</a>");
+            return res.status(401).send("Invalid credentials. <a href='/HTML/login.html'>Try again</a>");
         }
     });
 });
 
 server.post('/register', (req, res) => {
     const { fname, lname, phone, password, headline, category, bio, years } = req.body;
-    
-    // Generate the username: first 3 of fname + first 2 of lname
     const usernamePart = (fname.substring(0, 3) + lname.substring(0, 2)).toLowerCase();
 
-    // The order here MUST match the order in the array below
-    const sql = `INSERT INTO users 
-        (username, password, first_name, last_name, phone_num, job_title, industry, bio, years_experience) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    // Wrap in function(err) instead of (err) => to use this.lastID
-    db.run(sql, [
-        usernamePart, // Matches 'username'
-        password,     // Matches 'password'
-        fname,        // Matches 'first_name'
-        lname,        // Matches 'last_name'
-        phone,        // Matches 'phone_num'
-        headline,     // Matches 'job_title'
-        category,     // Matches 'industry'
-        bio,          // Matches 'bio'
-        years         // Matches 'years_experience'
-    ], function(err) { // <--- USE 'function' NOT '=>'
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
         if (err) {
-            console.error("Database Error:", err.message);
-            return res.status(500).send("Mission Failure: Could not save profile.");
+            console.error("Hashing Error:", err);
+            return res.status(500).send("Security Failure.");
         }
 
-        // Create the session
-        req.session.userId = this.lastID; // this.lastID only works with function(err)
-        req.session.user = usernamePart;
-        req.session.firstName = fname;
-        req.session.lastName = lname;
+        const sql = `INSERT INTO users 
+            (username, password, first_name, last_name, phone_num, job_title, industry, bio, years_experience) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-        console.log(`New user registered: ${usernamePart}`);
-        res.redirect('/HTML/marketplace.html');
+        db.run(sql, [
+            usernamePart,
+            hashedPassword,
+            fname,
+            lname,
+            phone,
+            headline,
+            category,
+            bio,
+            years
+        ], function(err) {
+            if (err) {
+                console.error("Database Error:", err.message);
+                return res.status(500).send("Mission Failure.");
+            }
+
+            req.session.userId = this.lastID;
+            req.session.user = usernamePart;
+            req.session.firstName = fname;
+            req.session.lastName = lname;
+
+            res.redirect('/HTML/marketplace.html');
+        });
     });
 });
 
@@ -336,6 +347,39 @@ server.post("/api/job/apply", (req, res) => {
         }
         res.json({ success: true });
     })
+});
+
+server.get('/api/my-accepted-jobs', (req, res) => {
+    const currentUserId = req.session.userId;
+    if (!currentUserId) return res.status(401).send("Unauthorized");
+
+    const sql = `
+        SELECT 
+            jobs.id, jobs.title, jobs.description, jobs.dateCreated,
+            users.first_name, users.last_name, users.phone_num
+        FROM jobs
+        JOIN users ON jobs.poster_id = users.id
+        WHERE jobs.worker_id = ? AND jobs.status = 'unavailable'`;
+
+    db.all(sql, [currentUserId], (err, rows) => {
+        if (err) return res.status(500).send(err.message);
+        res.json(rows);
+    });
+});
+
+server.delete('/api/finish-job/:id', (req, res) => {
+    const jobId = req.params.id;
+    const userId = req.session.userId;
+
+    // Safety check: Only the worker assigned to the job can "Confirm" it
+    const sql = `DELETE FROM jobs WHERE id = ? AND worker_id = ?`;
+
+    db.run(sql, [jobId, userId], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: "Job not found or unauthorized" });
+        
+        res.json({ success: true });
+    });
 });
 
 server.get("/api/health", (req, res) => res.json({ ok: true }));
